@@ -2,7 +2,7 @@
 // Reads a list of text strings from an input file, performs the selected formatting operations
 // and saves the results to an output file.
 #include <iostream>
-#include <string>
+#include <string.h>
 #include <vector>
 #include <ctype.h>
 #include "FileIO.h"
