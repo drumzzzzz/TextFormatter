@@ -19,14 +19,14 @@ USAGE example
 	Example: inputfile.txt outputfile.txt lc cw al
 
 
-    Example operation results from the source message: "Hello world! This is my message."
+    Example results from operations on the source message: "Hello world! This is my message."
 
     Operation   Description             Result
     uc          Upper Case              "HELLO WORLD! THIS IS MY MESSAGE."
     lc          Lower Case              "hello world! this is my message."
     rp          Removes Punctuation     "hello world  this is my message " 
     cw          Capitalize Words        "Hello World! This Is My Message."
-    dw          Decapitalize Words      "hELLO wORLD! tHIS iS mY mESSAGE.""
+    dw          Decapitalize Words      "hELLO wORLD! tHIS iS mY mESSAGE."
 
 The operation strings are case insensitive.
 

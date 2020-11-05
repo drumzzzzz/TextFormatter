@@ -1,3 +1,6 @@
+// Adapter design pattern project for UWGB Computer Science Fall semester, 2020.
+// Reads a list of text strings from an input file, performs the selected formatting operations
+// and saves the results to an output file.
 #include <iostream>
 #include <string>
 #include <vector>
@@ -6,6 +9,8 @@
 
 using namespace std;
 
+// Abstarct standard formatter operation types
+// lc: lower case, uc: upper case, rp: remove punctuation
 class Converter
 {
 public:
@@ -13,7 +18,8 @@ public:
 	virtual ~Converter() {}
 };
 
-// Advanced cw: capitalize word, cs: capitalize sentence, al: alternate letters, 
+// Abstract advanced formatter operation types
+// cw: capitalize word, cs: capitalize sentence, al: alternate letters, 
 class AdvancedConverter
 {
 public:
@@ -25,6 +31,7 @@ public:
 	virtual ~AdvancedConverter() {}
 };
 
+// Capitalize per word converter
 class CapitalConverter: public AdvancedConverter
 {
 public:
@@ -62,6 +69,7 @@ public:
 	~CapitalConverter() {}
 };
 
+// Decapitalize per word converter
 class DeCapitalConverter : public AdvancedConverter
 {
 public:
@@ -102,6 +110,7 @@ public:
 	~DeCapitalConverter() {}
 };
 
+// Alternate per letter converter
 class AlternateConverter : public AdvancedConverter
 {
 public:
@@ -136,7 +145,7 @@ public:
 	~AlternateConverter() {}
 };
 
-
+// Advanced text formatting adapter
 class TextAdapter : public Converter
 {
 	AdvancedConverter* advancedConverter;
@@ -180,8 +189,7 @@ public:
 	}
 };
 
-// Standard uc: uppercase, lc: lowercase, rp: remove puncuation
-// Advanced cw: capitalize word, dw: decapitalize word, al: alternate letters 
+// TextFormatter class: performs formatting per operation type and displays results
 class TextFormatter : public Converter , public FileIO
 {
 	TextAdapter* textAdapter = nullptr;
@@ -238,22 +246,24 @@ public:
 				}
 			}
 		}
-		// Advanced converter: captitalize words or alternate letters 
+		// Advanced converter: captitalize words, decapitalize words or alternate letters 
 		else if (format_type.compare("cw") == 0 || format_type.compare("dw") == 0 || format_type.compare("al") == 0)
 		{
 			textAdapter = new TextAdapter(format_type);
 			textAdapter->format(format_type, file_text);
 			delete textAdapter;
 		}
-		else 
+		else // Invalid or non-implemented operation
 		{
-			cout << "\nSkipping Unknown Command Argument: " << format_type << endl;
+			cout << "\nSkipping Unknown Command Operation: " << format_type << endl;
 			return;
 		}
 
 		DisplayResults(file_text);
 	}
 
+	// File operations
+	
 	static vector<string>* ReadFile(string filename)
 	{
 		cout << "Reading file: '" << filename << "'" << endl;
@@ -267,11 +277,13 @@ public:
 	}
 };
 
+// Argument extents
 const int ARGUMENT_MAX = 11;
 const int ARGUMENT_SIZE = 2;
 
 int main(int argc, char* argv[])
 {
+	// Validate arguments
 	if (argc <= 3 || argc > ARGUMENT_MAX)
 	{
 		cerr << "Usage: " << endl <<
@@ -280,8 +292,8 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 
+	// Iterate, validate and format arguments - add to array
 	vector<string> format_types;
-	
 	for (int idx = 3; idx < argc; idx++)
 	{
 		if (strlen(argv[idx]) != ARGUMENT_SIZE)
@@ -300,6 +312,7 @@ int main(int argc, char* argv[])
 		format_types.push_back(arg);
 	};
 
+	// Create formatter, read text and perform the operations 
 	TextFormatter textFormatter;
 	vector<string>* file_text_in = TextFormatter::ReadFile(argv[1]);
 
@@ -307,6 +320,9 @@ int main(int argc, char* argv[])
 	{
 		textFormatter.format(format_type, file_text_in);
 	}
+
+	// Save results
+	TextFormatter::WriteFile(argv[2], file_text_in);
 
 	return 0;
 }
