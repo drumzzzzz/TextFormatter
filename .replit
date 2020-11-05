@@ -1,0 +1,1 @@
+run="clang++-7 -pthread -std=c++17 ./TextFormatter/main.cpp -o ./TextFormatter/Observer.exe && ./TextFormatter/TextFormatter.exe infile.txt outfile.txt uc lc cw dw al rp"
